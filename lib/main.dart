@@ -37,35 +37,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> image = [
-    "https://anhdep123.com/wp-content/uploads/2021/02/hinh-nen-gai-xinh-full-hd-cho-dien-thoai.jpg",
-    "https://s1.media.ngoisao.vn/resize_580/news/2021/05/13/kim-ngan6-ngoisaovn-w660-h824.jpg"
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final size = MediaQuery.of(context).size;
-      final provider = Provider.of<CardProvider>(context, listen: false);
-      provider.setScreenSize(size);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return buildCard();
+    return SafeArea(
+      child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(20),
+          child: buildCard()),
+    );
   }
 
   Widget buildCard() {
-    final provider = Provider.of<CardProvider>(context);
-    final urlImages = provider.urlImages;
-    return Stack(
-      children: urlImages
-          .map((urlImages) => TinderCard(
-              urlImages: urlImages,
-              isFont: urlImages[urlImages.length-1] != urlImages))
-          .toList(),
-    );
+    final provider = context.watch<CardProvider>();
+    final images = provider.urlImages;
+    return images.isEmpty
+        ? Center(
+            child: TextButton(
+              onPressed: () {
+                provider.resetUsers();
+              },
+              child: const Text("reset"),
+            ),
+          )
+        : Stack(
+            children: images
+                .map((urlImages) => TinderCard(
+                    urlImages: urlImages, isFont: images.last == urlImages))
+                .toList(),
+          );
   }
 }

@@ -33,8 +33,7 @@ class TinderCardState extends State<TinderCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child:widget.isFont ? buildFrontCard() :buildCard()
-    );
+        child: widget.isFont ? buildFrontCard() : buildCard());
   }
 
   Widget buildFrontCard() => GestureDetector(
@@ -68,22 +67,60 @@ class TinderCardState extends State<TinderCard> {
               curve: Curves.easeInOut,
               transform: rotatedMatrix..translate(position.dx, position.dy),
               duration: Duration(milliseconds: milliseconds),
-              child: buildCard());
+              child: Stack(children: [buildCard(), buildStatus()]));
         }),
       );
 
   Widget buildCard() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(widget.urlImages),
+              fit: BoxFit.cover,
+              alignment: const Alignment(-0.3, 0)),
+        ),
         child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(widget.urlImages),
-                fit: BoxFit.cover,
-                alignment: const Alignment(-0.3, 0)),
-          ),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.transparent, Colors.black],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.7, 1])),
+        ),
+      ),
+    );
+  }
+
+  Widget buildStatus() {
+    final provider = context.read<CardProvider>();
+    final status = provider.getStatus();
+    switch (status) {
+      case CardStatus.like:
+        final child = buildWidget(color: Colors.green, title: "like");
+        return Positioned(top: 60, left: 50, child: child);
+      case CardStatus.dislike:
+        final child = buildWidget(color: Colors.red, title: "dislike");
+        return Positioned(top: 60, right: 50, child: child);
+      default:
+        return Container();
+    }
+  }
+
+  Widget buildWidget({required Color color, required String title}) {
+    return Container(
+      width: 100,
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color, width: 4)),
+      child: Center(
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: color),
         ),
       ),
     );

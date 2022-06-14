@@ -72,22 +72,26 @@ class TinderCardState extends State<TinderCard> {
       );
 
   Widget buildCard() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(widget.urlImages),
-              fit: BoxFit.cover,
-              alignment: const Alignment(-0.3, 0)),
-        ),
+    return Card(
+      color: Colors.transparent,
+      elevation: 10,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
         child: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.transparent, Colors.black],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.7, 1])),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(widget.urlImages),
+                fit: BoxFit.cover,
+                alignment: const Alignment(-0.3, 0)),
+          ),
+          child: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.transparent, Colors.black],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.7, 1])),
+          ),
         ),
       ),
     );
@@ -98,10 +102,10 @@ class TinderCardState extends State<TinderCard> {
     final status = provider.getStatus();
     switch (status) {
       case CardStatus.like:
-        final child = buildWidget(color: Colors.green, title: "like");
-        return Positioned(top: 60, left: 50, child: child);
+        final child = buildWidget(color: Colors.green, title: "LIKE");
+        return Positioned(top: 60, left: 50, child: child,);
       case CardStatus.dislike:
-        final child = buildWidget(color: Colors.red, title: "dislike");
+        final child = buildWidget(color: Colors.red, title: "NOPE");
         return Positioned(top: 60, right: 50, child: child);
       default:
         return Container();
@@ -115,12 +119,12 @@ class TinderCardState extends State<TinderCard> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color, width: 4)),
+          border: Border.all(color: color, width: 6)),
       child: Center(
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: TextStyle(color: color),
+          style: TextStyle(color: color,fontSize: 25,fontWeight: FontWeight.bold),
         ),
       ),
     );

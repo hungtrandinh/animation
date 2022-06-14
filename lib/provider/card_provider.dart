@@ -49,6 +49,9 @@ class CardProvider extends ChangeNotifier {
       case CardStatus.dislike:
         dislike();
         break;
+      case CardStatus.superLike:
+        supperLike();
+        break;
       default:
         resetPosition();
     }
@@ -110,7 +113,11 @@ class CardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void supperLike() {}
+  void supperLike() {
+    _angle =0;
+    _position -=Offset(0,_screenSize.height);
+    _nextCard();
+  }
 
   Future _nextCard() async {
     if (_urlImages.isEmpty) return;
